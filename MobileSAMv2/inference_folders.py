@@ -240,6 +240,21 @@ def main(args):
             cv2.imwrite(str(output_mask_path), colored_mask)
             cv2.imwrite(str(output_overlay_path), overlay_img)
             
+            image_mask_dir = output_mask_dir / name
+            image_mask_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Save each mask separately
+            for i, mask_tensor in enumerate(sorted_masks):
+                if i >= 255:  # Avoid overflow
+                    break
+                
+                # Convert mask to binary numpy array (255 for white, 0 for black)
+                binary_mask = (mask_tensor.cpu().numpy() > 0).astype(np.uint8) * 255
+                
+                # Save individual mask
+                mask_filename = f"mask_{i+1}{ext}"
+                cv2.imwrite(str(image_mask_dir / mask_filename), binary_mask)
+        
             # Calculate processing time
             processing_time = time.time() - start_time
             

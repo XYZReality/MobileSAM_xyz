@@ -5,3 +5,5 @@ __py
 **/__pycache__/
 
 MobileSAMv2/weight/
+
+mobile_sam.egg-info/
